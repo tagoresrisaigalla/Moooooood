@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import EnergyChart from "./EnergyChart";
 
 const ACCENT = "#4DB8B2";
 const BG = "#0c0c0c";
@@ -31,6 +32,16 @@ const formatTime = (iso: string): string => {
   const ampm = h >= 12 ? "PM" : "AM";
   h = h % 12 || 12;
   return `${h}:${m} ${ampm}`;
+};
+
+const isToday = (isoString: string) => {
+  const d = new Date(isoString);
+  const today = new Date();
+  return (
+    d.getDate() === today.getDate() &&
+    d.getMonth() === today.getMonth() &&
+    d.getFullYear() === today.getFullYear()
+  );
 };
 
 export default function Index() {
@@ -120,6 +131,7 @@ export default function Index() {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
+          ListFooterComponent={<EnergyChart logs={logs.filter(l => isToday(l.timestamp))} />}
         />
       </View>
     </SafeAreaView>
